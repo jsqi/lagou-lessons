@@ -6,6 +6,7 @@ import com.mars.core.SqlSessionFactory;
 import com.mars.core.SqlSessionFactoryBuilder;
 import com.mars.io.Resources;
 import com.mars.mapper.UserMapper;
+import org.junit.Test;
 
 import java.io.InputStream;
 import java.util.List;
@@ -31,7 +32,21 @@ public class MyBatisTest {
         System.out.println(inputStream);
     }
 
-    public static void main(String[] args) {
-        test();
+
+    @Test
+    public void updateTest() {
+        try {
+            InputStream inputStream = Resources.getResourceAsInputStream("mybatisConfig.xml");
+            SqlSessionFactoryBuilder sqlSessionFactoryBuilder = new SqlSessionFactoryBuilder();
+            SqlSessionFactory sqlSessionFactory = sqlSessionFactoryBuilder.build(inputStream);
+            SqlSession sqlSession = sqlSessionFactory.openSession();
+            UserMapper userMapper =  sqlSession.getMapper(UserMapper.class);
+            User user = new User();
+            user.setId(1);
+            user.setName("李四");
+            userMapper.upDateUserById(user);
+        } catch (Exception e) {
+
+        }
     }
 }

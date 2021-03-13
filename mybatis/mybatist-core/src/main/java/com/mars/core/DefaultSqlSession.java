@@ -5,18 +5,28 @@ import com.mars.pojo.Configuration;
 import java.lang.reflect.*;
 import java.util.List;
 
+/**
+ * @author jsq
+ * SqlSession 默认实现
+ */
 public class DefaultSqlSession implements SqlSession {
 
+    /**
+     * 配置信息
+     */
     private Configuration configuration;
 
     public DefaultSqlSession(Configuration configuration) {
         this.configuration = configuration;
     }
 
+
     public <E> List<E> listAll(String statementId, Object... params) throws Exception {
         SimpleExecutor simpleExecutor = new SimpleExecutor();
         return simpleExecutor.query(configuration,statementId,params);
     }
+
+
 
     public <T> T getOne(String statementId, Object... params) throws Exception {
         if(listAll(statementId,params).size()==1){
@@ -25,6 +35,18 @@ public class DefaultSqlSession implements SqlSession {
             throw new RuntimeException("select one but found"+listAll(statementId,params).size());
         }
     }
+
+    /**
+     * 根据条件更新
+     * @param statementId
+     * @param param
+     * @return
+     */
+    public int update(String statementId, Object param) {
+
+        return 0;
+    }
+
 
     public <T> T getMapper(Class<?> mapperClass) {
         // JDK 动态代理为Mapper接口生成代理类

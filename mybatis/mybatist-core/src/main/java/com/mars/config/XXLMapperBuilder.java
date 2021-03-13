@@ -23,7 +23,7 @@ public class XXLMapperBuilder {
         // 获取到Mapper标签
         Element rootElement = document.getRootElement();
         String nameSpace = rootElement.attributeValue("namespace");
-        List<Element> selectNodes = rootElement.selectNodes("//select");
+        List<Element> selectNodes = rootElement.selectNodes("select|update|insert|delete");
         for (Element element : selectNodes) {
             String id = element.attributeValue("id");
             String resultType = element.attributeValue("resultType");

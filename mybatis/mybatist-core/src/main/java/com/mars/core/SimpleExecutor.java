@@ -11,13 +11,14 @@ import com.mars.utils.ParameterMappingTokenHandler;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author jsq
+ * sql 执行器
+ */
 public class SimpleExecutor implements Executor {
 
 
@@ -64,6 +65,38 @@ public class SimpleExecutor implements Executor {
             resultList.add(resultObj);
         }
         return (List<E>) resultList;
+    }
+
+    /**
+     * 更新
+     *
+     * @param configuration
+     * @param statementId
+     * @param objects
+     * @return
+     */
+    public int update(Configuration configuration, String statementId, Object... objects) throws Exception {
+        MappedStatement  mappedStatement =  configuration.getMappedStatementMap().get(statementId);
+        Connection connection =  configuration.getDataSource().getConnection();
+        String sql = mappedStatement.getSql();
+        // 将原始sql 语句进行转化
+        BoundSql bondSql =  getBoundSql(sql);
+        PreparedStatement preparedStatement = connection.prepareStatement(bondSql.getSqlText());
+        // 设置参数
+        Class<?> paramsKlass = getClass(mappedStatement.getParamsType());
+        List<ParameterMapping> parameterMappingList = bondSql.getParameterMappingList();
+        for (int i = 0; i <parameterMappingList.size() ; i++) {
+            ParameterMapping parameterMapping = parameterMappingList.get(i);
+            String filedName = parameterMapping.getContent();
+            // 反射
+            Field declaredField = paramsKlass.getDeclaredField(filedName);
+            declaredField.setAccessible(true);
+            Object o = declaredField.get(objects[0]);
+            preparedStatement.setObject(i+1,o);
+        }
+        // 执行sql
+        int count  = preparedStatement.executeUpdate(sql);
+        return count;
     }
 
     private Class<?> getClass(String paramsType) throws ClassNotFoundException {

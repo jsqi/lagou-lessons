@@ -2,15 +2,28 @@ package com.mars.pojo;
 
 /**
  * 用于存放mapper.xml 解析出的数据
+ * @author jsq
  */
 public class MappedStatement {
 
+    /**
+     * mapper.xml 标签的 唯一Id
+     */
     private String id;
 
+    /**
+     * 参数类型
+     */
     private String paramsType;
 
+    /**
+     * 返回值类型
+     */
     private String resultType;
 
+    /**
+     * mapper.xml 获取的原始的sql
+     */
     private String sql;
 
     public String getId() {
