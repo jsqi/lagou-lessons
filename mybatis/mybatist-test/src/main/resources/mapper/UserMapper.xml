@@ -1,0 +1,15 @@
+<mapper namespace = "com.mars.mapper.UserMapper">
+
+    <select id="getUserById" paramType = "com.mars.bean.User" resultType = "com.mars.bean.User">
+        SELECT * FROM user where id = #{id} and name = #{name}
+    </select>
+
+    <select id="listAll"  resultType = "com.mars.bean.User">
+        SELECT * FROM user
+    </select>
+
+    <update id="upDateUserById" paramType = "com.mars.bean.User" resultType="java.lang.Integer">
+        UPDATE user SET name=#{name} where id = #{id}
+    </update>
+
+</mapper>
